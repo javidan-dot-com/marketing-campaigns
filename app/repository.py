@@ -16,21 +16,30 @@ class CampaignRepository:
     async def create_campaign(self, campaign_data: CampaignCreate):
         campaign = Campaign(
             title=campaign_data.title,
-            url=campaign_data.url
+            url=campaign_data.url,
+            payouts=[
+                Payout(
+                    amount=payout.amount,
+                    country=payout.country
+                ) for payout in campaign_data.payouts
+            ]
         )
         self.session.add(campaign)
         await self.session.flush()
         return campaign
     
-    async def create_payout(self, campaign_id, payout_data: PayoutCreate):
-        payout = Payout(
-            campaign_id=campaign_id,
-            amount=payout_data.amount,
-            country=payout_data.country
-        )
-        self.session.add(payout)
+    async def create_payout(self, campaign_id, payout_data: list[PayoutCreate]):
+        payouts = []
+        for payout in payout_data:
+            new_payout = Payout(
+                campaign_id=campaign_id,
+                amount=payout.amount,
+                country=payout.country
+            )
+            self.session.add(new_payout)
+            payouts.append(new_payout)
         await self.session.flush()
-        return payout
+        return payouts
     
     async def get_campaigns(self, keyword: str = None, is_running: bool = None):
         query = select(Campaign).options(selectinload(Campaign.payouts))
@@ -43,6 +52,14 @@ class CampaignRepository:
         
         result = await self.session.execute(query)
         return result.scalars().all()
+
+    async def update_campaign(self, campaign_id: int, status: bool):
+        query = select(Campaign).filter(Campaign.id == campaign_id)
+        result = await self.session.execute(query)
+        campaign = result.scalars().first()
+        campaign.status = status
+        await self.session.flush()
+        return campaign
 
 def get_campaign_repository(session: AsyncSession = Depends(get_db)):
     return CampaignRepository(session)
