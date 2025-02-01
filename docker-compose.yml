@@ -10,5 +10,18 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres_data:/var/lib/postgresql/data
 
+  api:
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: app/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
 volumes:
   postgres_data:
