@@ -8,7 +8,6 @@ class CreateCampaignUseCase(UseCase):
         campaign = await self.campaign_repository.create_campaign(data)
         await self.campaign_repository.create_payout(campaign.id, data.payouts)
 
-        print(campaign, 'campaign')
         return campaign
     
 def depends_create_campaign_use_case(campaign_repository = Depends(get_campaign_repository)):
