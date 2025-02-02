@@ -1,21 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { Campaign } from '@/app/types';
 
-type Campaign = {
-  id: string;
-  title: string;
-  url: string;
-  status: boolean;
-  payouts: {
-    country: string;
-    amount: number;
-  }[];
-};
-
-export function Table({ campaigns }: { campaigns: Campaign[] }) {
-  const [currentCampaigns, setCurrentCampaigns] = useState(campaigns || []);
-
+export function Table({
+  campaigns,
+  setCampaigns,
+}: {
+  campaigns: Campaign[];
+  setCampaigns: (campaigns: Campaign[]) => void;
+}) {
   const fetchUpdateCampaign = async (campaign: Campaign) => {
     try {
       const response = await fetch(`http://localhost:8000/campaigns/${campaign.id}`, {
@@ -34,7 +27,7 @@ export function Table({ campaigns }: { campaigns: Campaign[] }) {
     try {
       const data = await fetch('http://localhost:8000/campaigns');
       const updatedCampaigns = await data.json();
-      setCurrentCampaigns(updatedCampaigns);
+      setCampaigns(updatedCampaigns);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -58,7 +51,7 @@ export function Table({ campaigns }: { campaigns: Campaign[] }) {
         </thead>
 
         <tbody>
-          {currentCampaigns.map((campaign) => (
+          {campaigns.map((campaign) => (
             <tr key={campaign.id}>
               <td className="p-2">{campaign.title}</td>
               <td className="p-2">

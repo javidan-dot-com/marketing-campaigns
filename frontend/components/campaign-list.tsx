@@ -1,11 +1,14 @@
+'use client';
+
 import { Container } from './container';
 import Image from 'next/image';
 import { SearchTab } from './search-tab';
 import { Table } from './table';
+import { useState } from 'react';
+import { Campaign } from '@/app/types';
 
-export async function CampaignList() {
-  const data = await fetch('http://localhost:8000/campaigns');
-  const campaigns = await data.json();
+export function CampaignList({ campaigns }: { campaigns: Campaign[] }) {
+  const [updatedCampaign, setUpdatedCampaign] = useState(campaigns || []);
 
   return (
     <Container className="p-2 sm:p-4 bg-gray-900 rounded flex flex-col gap-4">
@@ -18,9 +21,9 @@ export async function CampaignList() {
         </button>
       </div>
 
-      <SearchTab />
+      <SearchTab setCampaigns={setUpdatedCampaign} />
 
-      <Table campaigns={campaigns} />
+      <Table campaigns={updatedCampaign} setCampaigns={setUpdatedCampaign} />
     </Container>
   );
 }
