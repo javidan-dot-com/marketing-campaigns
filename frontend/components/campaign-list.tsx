@@ -1,10 +1,12 @@
-'use client';
-
 import { Container } from './container';
 import Image from 'next/image';
 import { SearchTab } from './search-tab';
+import { Table } from './table';
 
-export function CampaignList() {
+export async function CampaignList() {
+  const data = await fetch('http://localhost:8000/campaigns');
+  const campaigns = await data.json();
+
   return (
     <Container className="p-2 sm:p-4 bg-gray-900 rounded flex flex-col gap-4">
       <div className="w-full flex flex-row items-center justify-between">
@@ -17,6 +19,8 @@ export function CampaignList() {
       </div>
 
       <SearchTab />
+
+      <Table campaigns={campaigns} />
     </Container>
   );
 }

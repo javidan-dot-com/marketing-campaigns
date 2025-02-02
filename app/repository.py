@@ -25,24 +25,12 @@ class CampaignRepository:
             ]
         )
         self.session.add(campaign)
-        await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(campaign)
         return campaign
     
-    async def create_payout(self, campaign_id, payout_data: list[PayoutCreate]):
-        payouts = []
-        for payout in payout_data:
-            new_payout = Payout(
-                campaign_id=campaign_id,
-                amount=payout.amount,
-                country=payout.country
-            )
-            self.session.add(new_payout)
-            payouts.append(new_payout)
-        await self.session.flush()
-        return payouts
-    
     async def get_campaigns(self, keyword: str = None, is_running: bool = None):
-        query = select(Campaign).options(selectinload(Campaign.payouts))
+        query = select(Campaign).order_by(Campaign.id.desc()).options(selectinload(Campaign.payouts))
 
         if keyword:
             query = query.filter(Campaign.title.ilike(f"%{keyword}%")).filter(Campaign.url.ilike(f"%{keyword}%"))
@@ -58,7 +46,8 @@ class CampaignRepository:
         result = await self.session.execute(query)
         campaign = result.scalars().first()
         campaign.status = status
-        await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(campaign)
         return campaign
 
 def get_campaign_repository(session: AsyncSession = Depends(get_db)):

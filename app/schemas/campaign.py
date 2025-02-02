@@ -13,3 +13,9 @@ class CampaignOutput(BaseModel):
     url: str
     status: bool
     payouts: list[PayoutCreate]
+
+class CampaignSaveOutput(BaseModel):
+    id: int
+
+class CampaignUpdate(BaseModel):
+    status: bool

@@ -6,7 +6,6 @@ from app.use_cases.base import UseCase
 class CreateCampaignUseCase(UseCase):
     async def execute(self, data: CampaignCreate):
         campaign = await self.campaign_repository.create_campaign(data)
-        await self.campaign_repository.create_payout(campaign.id, data.payouts)
 
         return campaign
     

@@ -1,3 +1,5 @@
+'use client';
+
 import { Container } from './container';
 import Image from 'next/image';
 
