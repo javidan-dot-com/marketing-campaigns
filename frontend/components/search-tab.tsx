@@ -2,8 +2,11 @@ import { ChangeEvent, ChangeEventHandler } from 'react';
 import { Container } from './container';
 import Image from 'next/image';
 import { Campaign } from '@/app/types';
+import { useState } from 'react';
 
 export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign[]) => void }) {
+  const [filter, setFilter] = useState<boolean>(false);
+
   function debounceSearch(onChange: ChangeEventHandler<HTMLInputElement>) {
     let timeout: NodeJS.Timeout;
 
@@ -35,6 +38,26 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
     }
   };
 
+  const handleFilterCampaignChange = async () => {
+    setFilter(!filter);
+
+    try {
+      if (!filter) {
+        const response = await fetch(`http://localhost:8000/campaigns?is_running=${!filter}`);
+        const data = await response.json();
+
+        setCampaigns(data);
+      } else {
+        const response = await fetch(`http://localhost:8000/campaigns`);
+        const data = await response.json();
+
+        setCampaigns(data);
+      }
+    } catch (error) {
+      console.error('Failed to filter campaign:', error);
+    }
+  };
+
   return (
     <Container className="bg-gray-900 rounded">
       <div className="w-full relative">
@@ -50,17 +73,19 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
 
       <div className="w-full flex flex-row items-center justify-start gap-2 mt-4">
         <button
-          className="px-4 py-2 text-gray-400 bg-gray-800 rounded text-sm flex flex-row items-center gap-2"
-          onClick={() => console.log('Filter campaign clicked')}
+          className={`px-4 py-2 rounded text-sm flex flex-row items-center gap-2 ${
+            filter ? 'text-gray-950 bg-primary' : 'text-gray-400 bg-gray-900'
+          }`}
+          onClick={handleFilterCampaignChange}
         >
           <Image
-            src={'/assets/plus-circle-icon.svg'}
+            src={'/assets/filter-icon.svg'}
             alt="Filter icon"
-            width={16}
-            height={16}
-            style={{ filter: 'invert(1)' }}
+            width={14}
+            height={14}
+            style={{ filter: filter ? 'invert(0)' : 'invert(1)' }}
           />
-          Campaign is &quot;Running&quot;
+          Filter by &quot;is Running&quot;
         </button>
       </div>
     </Container>
