@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 type Campaign = {
   id: string;
   title: string;
@@ -12,6 +14,37 @@ type Campaign = {
 };
 
 export function Table({ campaigns }: { campaigns: Campaign[] }) {
+  const [currentCampaigns, setCurrentCampaigns] = useState(campaigns || []);
+
+  const fetchUpdateCampaign = async (campaign: Campaign) => {
+    try {
+      const response = await fetch(`http://localhost:8000/campaigns/${campaign.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: !campaign.status }),
+      }).then((res) => res.json());
+
+      return response;
+    } catch (error) {
+      console.error(`Error updating campaign: ${error}`);
+    }
+  };
+
+  async function fetchData() {
+    try {
+      const data = await fetch('http://localhost:8000/campaigns');
+      const updatedCampaigns = await data.json();
+      setCurrentCampaigns(updatedCampaigns);
+    } catch (error) {
+      console.error(`Error fetching data: ${error}`);
+    }
+  }
+
+  const handleStatusChange = async (campaign: Campaign) => {
+    await fetchUpdateCampaign(campaign);
+    await fetchData();
+  };
+
   return (
     <div className="w-full overflow-x-scroll xs:max-w-xs sm:max-w-none scrollbar-thin scrollbar-track-gray-800">
       <table className="table-auto w-full whitespace-nowrap">
@@ -25,7 +58,7 @@ export function Table({ campaigns }: { campaigns: Campaign[] }) {
         </thead>
 
         <tbody>
-          {campaigns.map((campaign) => (
+          {currentCampaigns.map((campaign) => (
             <tr key={campaign.id}>
               <td className="p-2">{campaign.title}</td>
               <td className="p-2">
@@ -40,7 +73,12 @@ export function Table({ campaigns }: { campaigns: Campaign[] }) {
               </td>
               <td className="p-2">
                 <label className="inline-flex items-center cursor-pointer">
-                  <input type="checkbox" value="" className="sr-only peer" />
+                  <input
+                    type="checkbox"
+                    onChange={() => handleStatusChange(campaign)}
+                    className="peer hidden"
+                    checked={campaign.status}
+                  />
                   <div className="relative w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-black peer-checked:after:bg-black after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                 </label>
               </td>
