@@ -61,7 +61,7 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
 
   return (
     <Container className="bg-gray-900 rounded">
-      <div className="w-full relative">
+      <div className="w-full relative" data-cy="search-tab">
         <input
           type="text"
           placeholder="Type to search by title or campaign URL"
@@ -69,6 +69,7 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
           onChange={debounceSearch((event) =>
             handleSearchByTitleOrCampaignURL(event as unknown as string),
           )}
+          data-cy="search-input"
         />
       </div>
 
@@ -78,6 +79,7 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
             filter ? 'text-gray-950 bg-primary' : 'text-gray-400 bg-gray-900 border border-gray-700'
           }`}
           onClick={handleFilterCampaignChange}
+          data-cy="filter-input"
         >
           <Image
             src={'/assets/filter-icon.svg'}

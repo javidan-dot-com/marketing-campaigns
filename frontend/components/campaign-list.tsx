@@ -20,6 +20,7 @@ export function CampaignList({ campaigns }: { campaigns: Campaign[] }) {
         <button
           className="px-4 py-2 bg-primary rounded text-black text-sm flex flex-row items-center gap-2"
           onClick={() => setShowModal(true)}
+          data-cy="add-campaign-button"
         >
           <Image src={'/assets/plus-icon.svg'} alt="Plus icon" width={16} height={16} />
           Add campaign

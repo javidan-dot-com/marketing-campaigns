@@ -111,6 +111,7 @@ export function AddCampaignModal({
           }
           handleAddCampaign();
         }}
+        data-cy="add-campaign-form"
       >
         <div className="flex flex-row items-center justify-between">
           <h3 className="text-white text-lg font-semibold">Fill in the details</h3>
@@ -121,6 +122,7 @@ export function AddCampaignModal({
               setShowModal(false);
               resetCampaign();
             }}
+            data-cy="close-modal"
           >
             <Image
               src={'/assets/close-icon.svg'}
@@ -140,6 +142,7 @@ export function AddCampaignModal({
           onChange={(e) => setCampaign({ ...campaign, title: e.target.value })}
           minLength={1}
           required
+          data-cy="campaign-title"
         />
 
         <input
@@ -152,6 +155,7 @@ export function AddCampaignModal({
             setCampaign({ ...campaign, url: e.target.value });
           }}
           required
+          data-cy="campaign-url"
         />
 
         <div className="flex flex-col gap-4">
@@ -162,6 +166,7 @@ export function AddCampaignModal({
                 onChange={(e) => handlePayoutChange(index, 'country', e.target.value)}
                 className="w-1/2 p-4 bg-gray-800 rounded text-gray-400 focus:outline-none"
                 required
+                data-cy="payout-country"
               >
                 <option value="">Select country</option>
                 {countries.map((country) => (
@@ -187,12 +192,14 @@ export function AddCampaignModal({
                 }
                 className="w-1/2 p-4 bg-gray-800 rounded text-gray-400 focus:outline-none"
                 required
+                data-cy="payout-amount"
               />
             </div>
           ))}
           <button
             className="px-4 py-2 bg-gray-800 rounded text-white text-sm flex flex-row items-center gap-2 justify-center"
             onClick={handleAddPayout}
+            data-cy="add-payout"
           >
             <Image
               src={'/assets/plus-icon-filled.svg'}
@@ -208,6 +215,7 @@ export function AddCampaignModal({
         <button
           type="submit"
           className="px-4 py-2 bg-primary rounded text-black text-sm flex flex-row items-center gap-2 justify-center"
+          data-cy="add-campaign"
         >
           Add campaign
         </button>
