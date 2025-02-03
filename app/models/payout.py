@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL
+from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 
@@ -11,3 +11,7 @@ class Payout(Base):
     amount = Column(DECIMAL(10, 3))
 
     campaign = relationship("Campaign", back_populates="payouts")
+
+    __table_args__ = (
+        UniqueConstraint('campaign_id', 'country', name='uq_campaign_country'),
+    )

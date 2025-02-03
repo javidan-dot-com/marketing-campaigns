@@ -1,4 +1,17 @@
 services:
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - '3000:3000'
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+      - API_BASE_URL=http://api:8000
+    depends_on:
+      - api
   db:
     image: postgres
     platform: linux/amd64
@@ -15,6 +28,7 @@ services:
     build:
       context: ./
       dockerfile: app/Dockerfile
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0 --reload'
     env_file:
       - .env
     depends_on:
@@ -23,19 +37,5 @@ services:
       - .:/app
     ports:
       - '8000:8000'
-  frontend:
-    build:
-      context: ./frontend/
-      dockerfile: ./Dockerfile
-    env_file:
-      - ./frontend/.env
-    volumes:
-      - ./frontend:/app
-    ports:
-      - '3000:3000'
-    environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://api:8000
-    depends_on:
-      - api
 volumes:
   postgres_data:

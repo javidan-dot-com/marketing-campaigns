@@ -1,7 +1,7 @@
 import { CampaignList } from '@/components/campaign-list';
 
 export default async function Home() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns`);
+  const data = await fetch(`${process.env.API_BASE_URL}/campaigns`);
   const campaigns = await data.json();
 
   return (

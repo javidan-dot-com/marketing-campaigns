@@ -3,7 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 from app import config
-from app.exception import generic_exception_handler
+from app.exception import PayoutException, generic_exception_handler, payout_exception_handler
 from app.router import campaign_router
 
 app = FastAPI(
@@ -21,5 +21,6 @@ app.add_middleware(CORSMiddleware, **{
 })
 
 app.add_exception_handler(Exception, generic_exception_handler)
+app.add_exception_handler(PayoutException, payout_exception_handler)
 
 app.include_router(campaign_router, tags=["campaigns"], prefix="/campaigns")

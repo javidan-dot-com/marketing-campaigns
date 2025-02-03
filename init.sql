@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS payouts (
     amount DECIMAL(10, 2) NOT NULL
 );
 
+ALTER TABLE payouts ADD UNIQUE (campaign_id, country);
+
 INSERT INTO campaigns (title, url, status) VALUES
 ('Campaign 1', 'http://campaign.com/1', FALSE),
 ('Campaign 2', 'http://campaign.com/2', FALSE);
