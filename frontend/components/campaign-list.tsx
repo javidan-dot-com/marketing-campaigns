@@ -7,6 +7,7 @@ import { Table } from './table';
 import { useState } from 'react';
 import { Campaign } from '@/app/types';
 import { AddCampaignModal } from './add-campaign-modal';
+import { ToastContainer } from 'react-toastify';
 
 export function CampaignList({ campaigns }: { campaigns: Campaign[] }) {
   const [updatedCampaign, setUpdatedCampaign] = useState(campaigns || []);
@@ -14,6 +15,8 @@ export function CampaignList({ campaigns }: { campaigns: Campaign[] }) {
 
   return (
     <Container className="p-2 sm:p-4 bg-gray-900 rounded flex flex-col gap-4">
+      <ToastContainer />
+
       <div className="w-full flex flex-row items-center justify-between">
         <h3 className="text-white text-lg font-semibold">All campaigns</h3>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Campaign } from '@/app/types';
+import { toast } from 'react-toastify';
 
 export function Table({
   campaigns,
@@ -20,6 +21,10 @@ export function Table({
         },
       ).then((res) => res.json());
 
+      toast.success(
+        `Campaign "${campaign.title}" is now ${campaign.status ? 'stopped' : 'running'}`,
+      );
+
       return response;
     } catch (error) {
       console.error(`Error updating campaign: ${error}`);
@@ -32,6 +37,7 @@ export function Table({
       const updatedCampaigns = await data.json();
       setCampaigns(updatedCampaigns);
     } catch (error) {
+      toast.error(`Ups! Failed to fetch data: ${error}`);
       console.error(`Error fetching data: ${error}`);
     }
   }

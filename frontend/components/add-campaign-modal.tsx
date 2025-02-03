@@ -3,6 +3,7 @@ import { Container } from './container';
 import { Campaign } from '@/app/types';
 import { countries } from '@/app/mock-data';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 
 export function AddCampaignModal({
   setShowModal,
@@ -59,6 +60,16 @@ export function AddCampaignModal({
       newPayouts[index][field] = value as string;
     }
 
+    const duplicateCountry = newPayouts.some((payout, i) => {
+      if (i === index) return false;
+      return payout.country === value;
+    });
+
+    if (duplicateCountry) {
+      toast.error('Country already selected');
+      return;
+    }
+
     setPayouts(newPayouts);
     setCampaign({ ...campaign, payouts: newPayouts });
   };
@@ -77,8 +88,12 @@ export function AddCampaignModal({
         body: JSON.stringify(campaign),
       }).then((res) => res.json());
 
+      toast.success('Campaign created successfully');
+
       return response;
     } catch (error) {
+      toast.error(`Ups! Error creating campaign. ${error}`);
+
       console.error(`Error creating campaign: ${error}`);
     }
   }
