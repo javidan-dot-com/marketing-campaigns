@@ -74,7 +74,7 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
       <div className="w-full flex flex-row items-center justify-start gap-2 mt-4">
         <button
           className={`px-4 py-2 rounded text-sm flex flex-row items-center gap-2 ${
-            filter ? 'text-gray-950 bg-primary' : 'text-gray-400 bg-gray-900'
+            filter ? 'text-gray-950 bg-primary' : 'text-gray-400 bg-gray-900 border border-gray-700'
           }`}
           onClick={handleFilterCampaignChange}
         >
