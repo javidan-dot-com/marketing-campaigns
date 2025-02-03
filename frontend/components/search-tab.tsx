@@ -13,7 +13,6 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
     return (event: React.ChangeEvent<HTMLInputElement>) => {
       const value: string = event.currentTarget.value;
 
-      console.log('Debouncing search:', value);
       clearTimeout(timeout);
 
       timeout = setTimeout(() => {
@@ -27,12 +26,12 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
       const searchParams = new URLSearchParams();
       searchParams.set('keyword', keyword);
 
-      const response = await fetch(`http://localhost:8000/campaigns?${searchParams.toString()}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns?${searchParams.toString()}`,
+      );
       const data = await response.json();
 
       setCampaigns(data);
-
-      console.log('Search by title or campaign URL:', data);
     } catch (error) {
       console.error('Failed to search by title or campaign URL:', error);
     }
@@ -43,12 +42,14 @@ export function SearchTab({ setCampaigns }: { setCampaigns: (campaigns: Campaign
 
     try {
       if (!filter) {
-        const response = await fetch(`http://localhost:8000/campaigns?is_running=${!filter}`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns?is_running=${!filter}`,
+        );
         const data = await response.json();
 
         setCampaigns(data);
       } else {
-        const response = await fetch(`http://localhost:8000/campaigns`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns`);
         const data = await response.json();
 
         setCampaigns(data);

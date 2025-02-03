@@ -11,11 +11,14 @@ export function Table({
 }) {
   const fetchUpdateCampaign = async (campaign: Campaign) => {
     try {
-      const response = await fetch(`http://localhost:8000/campaigns/${campaign.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: !campaign.status }),
-      }).then((res) => res.json());
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns/${campaign.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: !campaign.status }),
+        },
+      ).then((res) => res.json());
 
       return response;
     } catch (error) {
@@ -25,7 +28,7 @@ export function Table({
 
   async function fetchData() {
     try {
-      const data = await fetch('http://localhost:8000/campaigns');
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns`);
       const updatedCampaigns = await data.json();
       setCampaigns(updatedCampaigns);
     } catch (error) {

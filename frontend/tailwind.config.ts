@@ -14,6 +14,9 @@ export default {
         foreground: 'var(--foreground)',
         primary: '#eafe0b',
       },
+      screens: {
+        xs: { max: '600px' },
+      },
     },
   },
   plugins: [],

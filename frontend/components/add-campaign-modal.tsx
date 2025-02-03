@@ -69,7 +69,7 @@ export function AddCampaignModal({
 
   async function fetchCreateCampaign(campaign: Omit<Campaign, 'id'>) {
     try {
-      const response = await fetch('http://localhost:8000/campaigns', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export function AddCampaignModal({
 
   async function fetchData() {
     try {
-      const data = await fetch('http://localhost:8000/campaigns');
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns`);
       const updatedCampaigns = await data.json();
       setCampaigns(updatedCampaigns);
     } catch (error) {
@@ -156,7 +156,7 @@ export function AddCampaignModal({
 
         <div className="flex flex-col gap-4">
           {payouts.map((payout, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={index} className="flex gap-4">
               <select
                 value={payout.country}
                 onChange={(e) => handlePayoutChange(index, 'country', e.target.value)}
