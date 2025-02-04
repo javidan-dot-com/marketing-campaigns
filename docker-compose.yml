@@ -15,13 +15,15 @@ services:
   db:
     image: postgres
     platform: linux/amd64
-    env_file:
-      - .env
     ports:
       - '5432:5432'
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=marketing
 
   api:
     platform: linux/amd64
@@ -29,8 +31,8 @@ services:
       context: ./
       dockerfile: app/Dockerfile
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0 --reload'
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://admin:password@db:5432/marketing
     depends_on:
       - db
     volumes:
